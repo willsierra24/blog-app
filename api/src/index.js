@@ -1,24 +1,27 @@
 const express = require("express");
-const mongoose = require("mongoose");
+const session = require('express-session');
+const mongoose = require("./config/database");
 require("dotenv").config();
 const userRoutes = require("./routes/user")
+const postRoutes = require("./routes/post")
+const authRoutes = require("./routes/auth")
+const passport = require('passport')
 
 const app = express()
 const port = process.env.PORT || 3001
 
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+  }));
+
 //middlewares
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.json())
-app.use('/api', userRoutes)
-
-//routes
-app.get("/", (req,res) => {
-    res.send("hello world!")
-})
-
-//mongodb connection
-mongoose.connect(process.env.MONGODB_URI)
-.then(() => console.log("connected to Atlas"))
-.catch((error) => console.error(error))
+app.use('/api', userRoutes, postRoutes, authRoutes)
 
 
 
