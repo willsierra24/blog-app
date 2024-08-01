@@ -5,6 +5,6 @@ const authController = require('../controllers/authController');
 
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
 
-router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: "/login" }), authController.googleCallback);
+router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: "/" }), authController.googleCallback);
 
 module.exports = router;
