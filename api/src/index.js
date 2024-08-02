@@ -1,25 +1,23 @@
 require("dotenv").config();
 const express = require("express");
-const app = express()
 const cors = require('cors');
 require("./config/database")
-const PORT = 3001
 const session = require('express-session');
 const passport = require('passport')
 const OAuth2Strategy = require("passport-google-oauth2").Strategy;
 const userdb = require("./models/user")
+const postRoutes = require("./routes/post");
 
-// const userRoutes = require("./routes/user")
-// const postRoutes = require("./routes/post")
-// const authRoutes = require("./routes/auth")
+const app = express()
+const PORT = 3001
 
 const clientid = process.env.GOOGLE_CLIENT_ID
 const clientsecret = process.env.GOOGLE_CLIENT_SECRET
 
 app.use(cors({
-  origin: 'http://localhost:3000', // Cambia esto según sea necesario
+  origin: 'http://localhost:3000', 
   methods:"GET,POST,PUT,DELETE",
-  credentials: true, // Si estás usando cookies o autenticación
+  credentials: true, 
 }));
 
 app.use(express.json())
@@ -30,10 +28,11 @@ app.use(session({
     saveUninitialized: true,
   }));
 
-//middlewares
+// Initialize Passport for authentication
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Configure Passport to use Google OAuth2 strategy
 passport.use(
   new OAuth2Strategy({
       clientID:clientid,
@@ -44,7 +43,6 @@ passport.use(
   async(accessToken,refreshToken,profile,done)=>{
       try {
           let user = await userdb.findOne({googleId:profile.id});
-
           if(!user){
               user = new userdb({
                   googleId:profile.id,
@@ -52,10 +50,8 @@ passport.use(
                   email:profile.emails[0].value,
                   image:profile.photos[0].value
               });
-
               await user.save();
           }
-
           return done(null,user)
       } catch (error) {
           return done(error,null)
@@ -72,7 +68,7 @@ passport.deserializeUser((user,done)=>{
   done(null,user);
 });
 
-// initial google ouath login
+// Routes for Google Authentication
 app.get("/auth/google",passport.authenticate("google",{scope:["profile","email"]}));
 
 app.get("/auth/google/callback",passport.authenticate("google",{
@@ -96,8 +92,7 @@ app.get("/logout",(req,res,next)=>{
     })
 })
 
-// app.use('/api', userRoutes, postRoutes, authRoutes)
-
+app.use('/', postRoutes)
 
 
 app.listen(PORT, () => {

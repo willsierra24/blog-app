@@ -1,24 +1,30 @@
-// import axios from 'axios';
-
-// export const loginUser = (googleResponse) => async (dispatch) => {
-//   try {
-//     const response = await axios.post('http://localhost:3001/api/users', { token: googleResponse.credential });
-//     dispatch({ type: 'LOGIN_SUCCESS', payload: response.data });
-//   } catch (error) {
-//     dispatch({ type: 'LOGIN_FAILURE', payload: error.response.data });
-//   }
-// };
-
 import axios from 'axios';
 
-export const loginUser = (tokenResponse) => async (dispatch) => {
+export const LOGIN_WITH_GOOGLE = 'LOGIN_WITH_GOOGLE';
+export const GET_USER_REQUEST = 'GET_USER_REQUEST';
+export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
+export const GET_USER_FAILURE = 'GET_USER_FAILURE';
+export const LOGOUT_USER = 'LOGOUT_USER';
+
+export const loginWithGoogle = () => async (dispatch) => {
   try {
-    const response = await axios.post('http://localhost:3001/api/users', {
-      token: tokenResponse.access_token,
-    });
-    dispatch({ type: 'LOGIN_SUCCESS', payload: response.data });
+      window.open("http://localhost:3001/auth/google/callback", "_self");
   } catch (error) {
-    const errorMessage = error.response && error.response.data ? error.response.data : 'An error occurred';
-    dispatch({ type: 'LOGIN_FAILURE', payload: errorMessage });
+      dispatch({ type: GET_USER_FAILURE, payload: error.message });
   }
+};
+
+export const getUser = () => async (dispatch) => {
+  dispatch({ type: GET_USER_REQUEST });
+  try {
+      const response = await axios.get('http://localhost:3001/login/sucess', { withCredentials: true });
+      dispatch({ type: GET_USER_SUCCESS, payload: response.data.user });
+  } catch (error) {
+      dispatch({ type: GET_USER_FAILURE, payload: error.message });
+  }
+};
+
+export const logoutUser = () => {
+  window.open('http://localhost:3001/logout', '_self');
+  return { type: LOGOUT_USER };
 };

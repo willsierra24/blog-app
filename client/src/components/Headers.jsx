@@ -1,73 +1,55 @@
-import React, { useEffect, useState } from 'react'
-import "./Headers.scss"
-import { NavLink } from "react-router-dom"
-import axios from "axios"
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import axios from 'axios';
+import './Headers.scss';
 
 const Headers = () => {
+    const user = useSelector((state) => state.auth.user);
     const [userdata, setUserdata] = useState({});
-    console.log("response", userdata)
 
-    const getUser = async () => {
-        try {
-            const response = await axios.get("http://localhost:3001/login/sucess", { withCredentials: true });
+    const logout = () => {
+        window.open("http://localhost:3001/logout", "_self");
+    };
 
-            setUserdata(response.data.user)
-        } catch (error) {
-            console.log("error", error)
-        }
-    }
-
-    // logoout
-    const logout = ()=>{
-        window.open("http://localhost:3001/logout","_self")
-    }
-
-    useEffect(() => {
-        getUser()
-    }, [])
     return (
-        <>
-            <header>
-                <nav>
-                    <div className="left">
-                        <h1>City Blog</h1>
-                    </div>
-                    <div className="right">
-                        <ul>
-                            <li>
-                                <NavLink to="/">
-                                    Home
-                                </NavLink>
-                            </li>
-                            {
-                                Object?.keys(userdata)?.length > 0 ? (
-                                    <>
-                                    <li style={{color:"black",fontWeight:"bold"}}>{userdata?.displayName}</li>
-                                        <li>
-                                            <NavLink to="/dashboard">
-                                                Dashboard
-                                            </NavLink>
-                                        </li>
-                                        <li onClick={logout}>Logout</li>
-                                        <li>
-                                            <img src={userdata?.image} style={{ width: "50px", borderRadius: "50%" }} alt="" />
-                                        </li>
-                                    </>
-                                ) : <li>
-                                    <NavLink to="/login">
-                                        Login
-                                    </NavLink>
+        <header>
+            <nav>
+                <div className="left">
+                    <h1>Poetry Blog</h1>
+                </div>
+                <div className="right">
+                    <ul>
+                        <li>
+                            <NavLink to="/">Home</NavLink>
+                        </li>
+                        {user ? (
+                            <>
+                                <li style={{ color: "black", fontWeight: "bold" }}>
+                                    {user.displayName}
                                 </li>
-                            }
+                                <li>
+                                    <NavLink to="/dashboard">Dashboard</NavLink>
+                                </li>
+                                <li onClick={logout}>Logout</li>
+                                <li>
+                                    <img
+                                        src={user.image}
+                                        style={{ width: "50px", borderRadius: "50%" }}
+                                        alt="User"
+                                    />
+                                </li>
+                            </>
+                        ) : (
+                            <li>
+                                <NavLink to="/login">Login</NavLink>
+                            </li>
+                        )}
+                    </ul>
+                </div>
+            </nav>
+        </header>
+    );
+};
 
-
-
-                        </ul>
-                    </div>
-                </nav>
-            </header>
-        </>
-    )
-}
-
-export default Headers
+export default Headers;
