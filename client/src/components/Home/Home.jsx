@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchBlogPosts} from '../redux/actions/blogActions';
+import { fetchBlogPosts} from '../../redux/actions/blogActions';
+import './Home.scss'
 
 const Home = () => {
 
@@ -14,12 +15,13 @@ const Home = () => {
 
   return (
     <>
-      <div style={{textAlign:"center"}}>
-        <h1>Home Page</h1>
+      <div className='container'>
+        <h1>Top Poetries</h1>
         {blogs.map((blog) => (
-        <div key={blog._id}>
+        <div className='wrapper' key={blog._id}>
           <h3>{blog.title}</h3>
           <p>{blog.content}</p>
+          <p className='author'>{blog.author}</p>
         </div>
       ))}
       </div>

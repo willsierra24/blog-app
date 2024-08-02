@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { createBlogPost, deleteBlogPost, updateBlogPost, fetchBlogPosts } from '../redux/actions/blogActions';
-import { getUser } from '../redux/actions/authActions';
+import { createBlogPost, deleteBlogPost, updateBlogPost, fetchBlogPosts } from '../../redux/actions/blogActions';
+import { getUser } from '../../redux/actions/authActions';
 import './Dashboard.scss';
 
 class Dashboard extends Component {
@@ -64,7 +64,7 @@ class Dashboard extends Component {
       <>
         {loading && <p>Loading...</p>}
         {error && <p>Error: {error}</p>}
-        {user && <p>Welcome, {user.displayName}</p>}
+        {user && <p className='welcome'>Welcome, {user.displayName}</p>}
         <form onSubmit={this.handleSubmit}>
           <input
             type="text"
@@ -84,11 +84,17 @@ class Dashboard extends Component {
           <button type="submit">{editingId ? 'Update' : 'Submit'}</button>
         </form>
         {userBlogs.map((blog) => (
-          <div key={blog._id}>
-            <h3>{blog.title}</h3>
+          <div className='container' key={blog._id}>
+            <div className='wrapper'>
+             <h3>{blog.title}</h3>
             <p>{blog.content}</p>
+            <div className='buttons'>
             <button onClick={() => this.handleDelete(blog._id)}>Delete</button>
-            <button onClick={() => this.handleEdit(blog)}>Edit</button>
+            <button onClick={() => this.handleEdit(blog)}>Edit</button>                
+            </div>
+
+            </div>
+
           </div>
         ))}
       </>

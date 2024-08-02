@@ -4,10 +4,10 @@ import { useDispatch } from 'react-redux';
 
 import { getUser } from './redux/actions/authActions';
 import './App.css';
-import Home from './components/Home';
-import Headers from './components/Headers';
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import Home from './components/Home/Home';
+import Headers from './components/Headers/Headers';
+import Login from './components/Login/Login';
+import Dashboard from './components/Dashboard/Dashboard';
 import Error from './components/Error';
 import PrivateRoute from './PrivateRoute';
 

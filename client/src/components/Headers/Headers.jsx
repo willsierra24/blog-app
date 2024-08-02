@@ -16,7 +16,7 @@ const Headers = () => {
         <header>
             <nav>
                 <div className="left">
-                    <h1>Poetry Blog</h1>
+                <NavLink to="/"><h1 className='logo'>Poetry Blog</h1></NavLink>
                 </div>
                 <div className="right">
                     <ul>
@@ -25,9 +25,7 @@ const Headers = () => {
                         </li>
                         {user ? (
                             <>
-                                <li style={{ color: "black", fontWeight: "bold" }}>
-                                    {user.displayName}
-                                </li>
+                                
                                 <li>
                                     <NavLink to="/dashboard">Dashboard</NavLink>
                                 </li>
